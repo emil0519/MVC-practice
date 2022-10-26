@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Index</title>
+  </head>
+  <body class="MessageAllDataContainer">
+    <style>
+      .MessageAllDataContainer {
+        background-color: #fffcec;
+      }
+
+      .MessageIssue {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 20px;
+      }
+
+      .MessageIssueId {
+        width: 20%;
+      }
+
+      .MessageIssueMessage {
+        width: 50%;
+        word-break: break-all;
+        margin-left: 20px;
+        margin-right: 40px;
+      }
+
+      .MessageIssuetimestamp {
+        width: 30%;
+        display: flex;
+        justify-content: start;
+        align-items: end;
+      }
+    </style>
+    <div>
+      <div id="MessageAllData">
+        <button onclick="MessageData()">查看所有Message</button>
+        <button onclick="window.location.assign('./messages')">留言</button>
+        <script>
+          function MessageData() {
+            let data = document.getElementById("MessageAllData");
+            let Message;
+            fetch("http://localhost:3004/messages")
+              .then((res) => {
+                res
+                  .json()
+                  .then((text) => {
+                    console.log(text);
+                    return (Message = { MessageDate: text });
+                  })
+                  .then((Message) => {
+                    Data(Message.MessageDate);
+                    console.log(Message);
+                  });
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+
+            function Data(Message) {
+              if (Message.length === 0)
+                return (data.innerHTML = `<div class="NoData">還沒有Message哦</div>`);
+              else {
+                return Message.map((_item, index) => {
+                  data.innerHTML += `
+                <div class="MessageIssue">
+                  <div class="MessageIssueId">${Message[index].id}</div>
+                  <div class="MessageIssueMessage">${Message[index].message}</div>
+                  <div class="MessageIssuetimestamp">${Message[index].timestamp}</div>
+                  </div>
+              `;
+                });
+              }
+            }
+            console.log(data);
+          }
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
+message.txt 3 KB
